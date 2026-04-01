@@ -16,6 +16,24 @@ import os
 OUT = os.path.join(os.path.dirname(__file__),
                    "ATmega32U4_Configurator_Upute.pdf")
 
+# ── Register Windows fonts (support Croatian characters) ─────────────────────
+WINFONTS = os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts")
+
+pdfmetrics.registerFont(TTFont("Calibri",      os.path.join(WINFONTS, "calibri.ttf")))
+pdfmetrics.registerFont(TTFont("Calibri-Bold",  os.path.join(WINFONTS, "calibrib.ttf")))
+pdfmetrics.registerFont(TTFont("Calibri-Italic", os.path.join(WINFONTS, "calibrii.ttf")))
+pdfmetrics.registerFont(TTFont("Calibri-BoldItalic", os.path.join(WINFONTS, "calibriz.ttf")))
+pdfmetrics.registerFont(TTFont("Consolas",      os.path.join(WINFONTS, "consola.ttf")))
+pdfmetrics.registerFont(TTFont("Consolas-Bold", os.path.join(WINFONTS, "consolab.ttf")))
+
+from reportlab.pdfbase.pdfmetrics import registerFontFamily
+registerFontFamily("Calibri",
+                   normal="Calibri", bold="Calibri-Bold",
+                   italic="Calibri-Italic", boldItalic="Calibri-BoldItalic")
+
+FONT_BODY = "Calibri"
+FONT_CODE = "Consolas"
+
 # ── Colours ───────────────────────────────────────────────────────────────────
 DARK   = HexColor("#1A252F")
 ACCENT = HexColor("#2980B9")
@@ -27,36 +45,37 @@ TBL_HEAD = HexColor("#2C3E50")
 styles = getSampleStyleSheet()
 
 sTitle = ParagraphStyle("DocTitle", parent=styles["Title"],
-                        fontSize=22, leading=28, textColor=DARK,
-                        spaceAfter=6, alignment=TA_CENTER)
+                        fontName=FONT_BODY, fontSize=22, leading=28,
+                        textColor=DARK, spaceAfter=6, alignment=TA_CENTER)
 
 sSubtitle = ParagraphStyle("Subtitle", parent=styles["Normal"],
-                           fontSize=11, leading=14, textColor=HexColor("#555"),
+                           fontName=FONT_BODY, fontSize=11, leading=14,
+                           textColor=HexColor("#555"),
                            alignment=TA_CENTER, spaceAfter=20)
 
 sH1 = ParagraphStyle("H1", parent=styles["Heading1"],
-                      fontSize=16, leading=20, textColor=ACCENT,
-                      spaceBefore=18, spaceAfter=8,
+                      fontName="Calibri-Bold", fontSize=16, leading=20,
+                      textColor=ACCENT, spaceBefore=18, spaceAfter=8,
                       borderWidth=0, borderPadding=0)
 
 sH2 = ParagraphStyle("H2", parent=styles["Heading2"],
-                      fontSize=13, leading=16, textColor=DARK,
-                      spaceBefore=12, spaceAfter=6)
+                      fontName="Calibri-Bold", fontSize=13, leading=16,
+                      textColor=DARK, spaceBefore=12, spaceAfter=6)
 
 sH3 = ParagraphStyle("H3", parent=styles["Heading3"],
-                      fontSize=11, leading=14, textColor=DARK,
-                      spaceBefore=8, spaceAfter=4)
+                      fontName="Calibri-Bold", fontSize=11, leading=14,
+                      textColor=DARK, spaceBefore=8, spaceAfter=4)
 
 sBody = ParagraphStyle("Body", parent=styles["Normal"],
-                       fontSize=10, leading=14, alignment=TA_JUSTIFY,
-                       spaceAfter=6)
+                       fontName=FONT_BODY, fontSize=10, leading=14,
+                       alignment=TA_JUSTIFY, spaceAfter=6)
 
 sBullet = ParagraphStyle("Bullet", parent=sBody,
                          bulletIndent=10, leftIndent=22,
                          spaceAfter=3)
 
 sCode = ParagraphStyle("Code", parent=styles["Code"],
-                       fontSize=8.5, leading=11,
+                       fontName=FONT_CODE, fontSize=8.5, leading=11,
                        backColor=CODE_BG,
                        borderWidth=0.5, borderColor=HexColor("#DDD"),
                        borderPadding=6, leftIndent=12,
@@ -80,7 +99,8 @@ def tbl(data, col_widths=None):
     t.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), TBL_HEAD),
         ("TEXTCOLOR",  (0, 0), (-1, 0), white),
-        ("FONTNAME",   (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTNAME",   (0, 0), (-1, 0), "Calibri-Bold"),
+        ("FONTNAME",   (0, 1), (-1, -1), FONT_BODY),
         ("FONTSIZE",   (0, 0), (-1, 0), 9),
         ("FONTSIZE",   (0, 1), (-1, -1), 9),
         ("ALIGN",      (0, 0), (-1, -1), "LEFT"),
